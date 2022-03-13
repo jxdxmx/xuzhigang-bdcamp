@@ -20,8 +20,7 @@ import java.net.URI;
 import java.util.*;
 
 public class WordCount2 {
-    public static class TokenizerMapper
-            extends Mapper<Object, Text, Text, IntWritable> {
+    public static class TokenizerMapper extends Mapper<Object, Text, Text, IntWritable> {
 
         enum CountersEnum {INPUT_WORDS}
 
@@ -62,9 +61,13 @@ public class WordCount2 {
         }
 
         @Override
-        public void map(Object key, Text value, Context context
-        ) throws IOException, InterruptedException {
-            System.out.println(String.format("map --- key:%s,value:%s\n", key, value)); // debug
+        public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
+            System.out.println(String.format("map --- key:%s,value:%s\n", key, value)); // debug # 这里的key，居然是同文件的前一行的末尾index！！即：key就是字符index！！
+//            map-- - key:0, value:Hello Hadoop, Goodbye to hadoop.
+//            map-- - key:33, value:Hi, My name is you !
+//                    map --- key:0,value:Hello World, Bye World!
+//                    map --- key:24,value:My name is xuzhigang,Hello,How are you!  # 这里的key，居然是同文件的前一行的末尾index！！即：key就是字符index！！
+
             String line = (caseSensitive) ?
                     value.toString() : value.toString().toLowerCase();
             for (String pattern : patternsToSkip) {
@@ -81,14 +84,14 @@ public class WordCount2 {
         }
     }
 
-    public static class IntSumReducer
-            extends Reducer<Text, IntWritable, Text, IntWritable> {
+    public static class IntSumReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
         private IntWritable result = new IntWritable();
 
-        public void reduce(Text key, Iterable<IntWritable> values,
-                           Context context
-        ) throws IOException, InterruptedException {
+        public void reduce(Text key, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
             System.out.println(String.format("reduce --- key:%s,values:%s\n", key, values)); // debug
+//            reduce --- key:Bye,values:org.apache.hadoop.mapreduce.task.ReduceContextImpl$ValueIterable@622723b6
+//            reduce --- key:Hello,values:org.apache.hadoop.mapreduce.task.ReduceContextImpl$ValueIterable@622723b6
+//            reduce --- key:My,values:org.apache.hadoop.mapreduce.task.ReduceContextImpl$ValueIterable@622723b6
 
             int sum = 0;
             for (IntWritable val : values) {
