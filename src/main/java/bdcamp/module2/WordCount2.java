@@ -23,7 +23,7 @@ public class WordCount2 {
     public static class TokenizerMapper
             extends Mapper<Object, Text, Text, IntWritable> {
 
-        static enum CountersEnum {INPUT_WORDS}
+        enum CountersEnum {INPUT_WORDS}
 
         private final static IntWritable one = new IntWritable(1);
         private Text word = new Text();
@@ -35,15 +35,14 @@ public class WordCount2 {
         private BufferedReader fis;
 
         @Override
-        public void setup(Context context) throws IOException,
-                InterruptedException {
+        public void setup(Context context) throws IOException {
             conf = context.getConfiguration();
             caseSensitive = conf.getBoolean("wordcount.case.sensitive", true); //  -Dwordcount.case.sensitive=true
             if (conf.getBoolean("wordcount.skip.patterns", false)) {
                 URI[] patternsURIs = Job.getInstance(conf).getCacheFiles();
                 for (URI patternsURI : patternsURIs) {
                     Path patternsPath = new Path(patternsURI.getPath());
-                    String patternsFileName = patternsPath.getName().toString();
+                    String patternsFileName = patternsPath.getName();
                     parseSkipFile(patternsFileName);
                 }
             }
@@ -52,7 +51,7 @@ public class WordCount2 {
         private void parseSkipFile(String fileName) {
             try {
                 fis = new BufferedReader(new FileReader(fileName));
-                String pattern = null;
+                String pattern;
                 while ((pattern = fis.readLine()) != null) {
                     patternsToSkip.add(pattern);
                 }
@@ -65,7 +64,7 @@ public class WordCount2 {
         @Override
         public void map(Object key, Text value, Context context
         ) throws IOException, InterruptedException {
-            System.out.println(String.format("key:%s,value:%s\n", key, value)); // debug
+            System.out.println(String.format("map --- key:%s,value:%s\n", key, value)); // debug
             String line = (caseSensitive) ?
                     value.toString() : value.toString().toLowerCase();
             for (String pattern : patternsToSkip) {
@@ -89,7 +88,7 @@ public class WordCount2 {
         public void reduce(Text key, Iterable<IntWritable> values,
                            Context context
         ) throws IOException, InterruptedException {
-            System.out.println(String.format("key:%s,values:%s\n", key, values)); // debug
+            System.out.println(String.format("reduce --- key:%s,values:%s\n", key, values)); // debug
 
             int sum = 0;
             for (IntWritable val : values) {
