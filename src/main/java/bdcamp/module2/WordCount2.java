@@ -38,7 +38,7 @@ public class WordCount2 {
         public void setup(Context context) throws IOException,
                 InterruptedException {
             conf = context.getConfiguration();
-            caseSensitive = conf.getBoolean("wordcount.case.sensitive", true);
+            caseSensitive = conf.getBoolean("wordcount.case.sensitive", true); //  -Dwordcount.case.sensitive=true
             if (conf.getBoolean("wordcount.skip.patterns", false)) {
                 URI[] patternsURIs = Job.getInstance(conf).getCacheFiles();
                 for (URI patternsURI : patternsURIs) {
@@ -65,6 +65,7 @@ public class WordCount2 {
         @Override
         public void map(Object key, Text value, Context context
         ) throws IOException, InterruptedException {
+            System.out.println(String.format("key:%s,value:%s\n", key, value)); // debug
             String line = (caseSensitive) ?
                     value.toString() : value.toString().toLowerCase();
             for (String pattern : patternsToSkip) {
@@ -88,6 +89,8 @@ public class WordCount2 {
         public void reduce(Text key, Iterable<IntWritable> values,
                            Context context
         ) throws IOException, InterruptedException {
+            System.out.println(String.format("key:%s,values:%s\n", key, values)); // debug
+
             int sum = 0;
             for (IntWritable val : values) {
                 sum += val.get();
@@ -117,7 +120,7 @@ public class WordCount2 {
         for (int i = 0; i < remainingArgs.length; ++i) {
             if ("-skip".equals(remainingArgs[i])) {
                 job.addCacheFile(new Path(remainingArgs[++i]).toUri());
-                job.getConfiguration().setBoolean("wordcount.skip.patterns", true);
+                job.getConfiguration().setBoolean("wordcount.skip.patterns", true); //  -skip /user/joe/wordcount/patterns.txt
             } else {
                 otherArgs.add(remainingArgs[i]);
             }
