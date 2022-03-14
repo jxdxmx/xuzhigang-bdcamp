@@ -62,7 +62,7 @@ public class WordCount2 {
 
         @Override
         public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
-            System.out.println(String.format("map --- key:%s,value:%s\n", key, value)); // debug # 这里的key，居然是同文件的前一行的末尾index！！即：key就是字符index！！
+            System.out.println(String.format("map --- key:%s,value:%s", key, value)); // debug # 这里的key，居然是同文件的前一行的末尾index！！即：key就是字符index！！
 //            map-- - key:0, value:Hello Hadoop, Goodbye to hadoop.
 //            map-- - key:33, value:Hi, My name is you !
 //                    map --- key:0,value:Hello World, Bye World!
@@ -71,6 +71,7 @@ public class WordCount2 {
             String line = (caseSensitive) ?
                     value.toString() : value.toString().toLowerCase();
             for (String pattern : patternsToSkip) {
+                System.out.println(String.format("map debug,pattern:%s", pattern)); // debug pattern
                 line = line.replaceAll(pattern, "");
             }
             StringTokenizer itr = new StringTokenizer(line);
@@ -80,7 +81,10 @@ public class WordCount2 {
                 Counter counter = context.getCounter(CountersEnum.class.getName(),
                         CountersEnum.INPUT_WORDS.toString());
                 counter.increment(1);
+                System.out.println(String.format("map debug,nextToken:%s", new String(word.getBytes()))); // debug pattern
             }
+
+
         }
     }
 
@@ -88,7 +92,7 @@ public class WordCount2 {
         private IntWritable result = new IntWritable();
 
         public void reduce(Text key, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
-            System.out.println(String.format("reduce --- key:%s,values:%s\n", key, values)); // debug
+            System.out.println(String.format("reduce --- key:%s,values:%s", key, values)); // debug
 //            reduce --- key:Bye,values:org.apache.hadoop.mapreduce.task.ReduceContextImpl$ValueIterable@622723b6
 //            reduce --- key:Hello,values:org.apache.hadoop.mapreduce.task.ReduceContextImpl$ValueIterable@622723b6
 //            reduce --- key:My,values:org.apache.hadoop.mapreduce.task.ReduceContextImpl$ValueIterable@622723b6

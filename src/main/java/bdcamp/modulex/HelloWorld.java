@@ -10,5 +10,7 @@ public class HelloWorld {
             System.out.println(itr.nextToken());
         }
 
+        // line = line.replaceAll(pattern, "");
+        System.out.println("test : " + "Hello ,world".replaceAll(".", ""));
     }
 }
