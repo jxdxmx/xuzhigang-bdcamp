@@ -1,4 +1,4 @@
-package bdcamp.module2;
+package bdcamp.module2.WordCount2;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
@@ -106,7 +106,8 @@ public class WordCount2 {
         }
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void mainHelloWorld(String[] args) throws Exception {
+//        public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
         GenericOptionsParser optionParser = new GenericOptionsParser(conf, args);
         String[] remainingArgs = optionParser.getRemainingArgs();

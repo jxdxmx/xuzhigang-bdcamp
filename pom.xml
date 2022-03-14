@@ -23,7 +23,7 @@
                             <archive>
                                 <manifest>
                                     <mainClass>
-                                        bdcamp.module2.WordCount2
+                                        bdcamp.module2.Traffic
                                     </mainClass>
                                 </manifest>
                             </archive>
