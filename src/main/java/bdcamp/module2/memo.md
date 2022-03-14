@@ -26,5 +26,11 @@ docker cp HTTP_20130313143750.dat 4c:/usr/local/hadoop/bdlearning/HTTP_201303131
 ../bin/hadoop fs -cat /user/joe/wordcount/output/part-r-00000
 
 #执行log
-find / -path "*1647186214349_0013*"|grep std
+find / -path "*1647186214349_0016*"|grep std
 
+cat /usr/local/hadoop-2.7.0/logs/userlogs/application_1647186214349_0016/container_1647186214349_0016_01_000002/stderr
+cat /usr/local/hadoop-2.7.0/logs/userlogs/application_1647186214349_0016/container_1647186214349_0016_01_000002/stdout
+cat /usr/local/hadoop-2.7.0/logs/userlogs/application_1647186214349_0016/container_1647186214349_0016_01_000001/stderr
+cat /usr/local/hadoop-2.7.0/logs/userlogs/application_1647186214349_0016/container_1647186214349_0016_01_000001/stdout
+cat /usr/local/hadoop-2.7.0/logs/userlogs/application_1647186214349_0016/container_1647186214349_0016_01_000003/stderr
+cat /usr/local/hadoop-2.7.0/logs/userlogs/application_1647186214349_0016/container_1647186214349_0016_01_000003/stdout

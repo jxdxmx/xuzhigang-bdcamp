@@ -60,7 +60,7 @@ public class Traffic {
             }
 
             PhoneTraffic pt = new PhoneTraffic();
-            pt.Phone = arr[1];
+            pt.Phone = arr[2];
             pt.Up = Long.parseLong(arr[9]);
             pt.Down = Long.parseLong(arr[10]);
             pt.Total = pt.Up + pt.Down;
@@ -74,6 +74,7 @@ public class Traffic {
         public void reduce(Text key, Iterable<PhoneTraffic> values, Context context) throws IOException, InterruptedException {
             System.out.println(String.format("reduce --- key:%s,values:%s", key, values)); // debug
 
+            result.Phone = key.toString();
             for (PhoneTraffic pt : values) {
                 result.Up += pt.Up;
                 result.Down += pt.Down;
