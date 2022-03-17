@@ -29,7 +29,8 @@ HBase（HBase shell 进入）：
 （13）删除表：drop 'jinlantao_test:test1'
 
 删除命名空间：drop_namespace 'jinlantao_test'
-
+在创建表的时候，指定保存的版本数（假设指定为5）:create 'Student',{NAME=>'username',VERSIONS=>5}   如果表已经存在，那么用alter
+查询时，指定查询的历史版本数。默认会查询出最新的数据。（有效取值为1到5）：get 'Student','1001',{COLUMN=>'username',VERSIONS=>5}
 
 hbase(main):028:0* get 'jinlantao_test:test1', 'r1','cf1'
 COLUMN                                       CELL                                                                                                                           
