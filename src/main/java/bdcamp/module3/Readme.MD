@@ -13,31 +13,28 @@ docker run -itd -p 2181:2181 -p 8080:8080 -p 8085:8085 -p 9090:9090 \
 docker exec -it jikeshijian_hbase bash
 # 进入hbase shell
 hbase shell
-
 HBase（HBase shell 进入）：
 （1）创建命名空间：create_namespace 'jinlantao_test'
-（3）查询命名空间：list_namespace
-（4）列出表：list
-（5）创建表：create 'jinlantao_test:test1', 'cf1'
-（6）描述表：describe 'jinlantao_test:test1'                          # 单引号必须有，不能省略
-（7）插入数据：put 'jinlantao_test:test1', 'r1', 'cf1:c1', 'value'
-（8）获取数据：get 'jinlantao_test:test1', 'r1'            # 也可以使用get 'jinlantao_test:test1', 'r1','cf1'   、get 'jinlantao_test:test1', 'r1','cf1:c1'
-（9）扫描表：scan 'jinlantao_test:test1'
-（10）统计总数：count 'jinlantao_test:test1'
-（11）删除数据：delete 'jinlantao_test:test1', 'r1', 'cf1:c1'
-（12）禁止表：disable 'jinlantao_test:test1'
-（13）删除表：drop 'jinlantao_test:test1'
-
-删除命名空间：drop_namespace 'jinlantao_test'
-在创建表的时候，指定保存的版本数（假设指定为5）:create 'Student',{NAME=>'username',VERSIONS=>5}   如果表已经存在，那么用alter
-查询时，指定查询的历史版本数。默认会查询出最新的数据。（有效取值为1到5）：get 'Student','1001',{COLUMN=>'username',VERSIONS=>5}
-
-多列族查询:scan 'xuzhigang:student',{COLUMN=>['info2','score']}
-指定多个列族、并使用列限定词模糊查询：scan 'xuzhigang:student', {COLUMNS => ['info2','score'], FILTER => "(QualifierFilter(=,'substring:75'))"}
-rowkey范围值查询（查询info2和score列族，[STARTROW,ENDROW)）：scan 'xuzhigang:student',{COLUMNS => ['info','score'], STARTROW => 'Rose', ENDROW => 'xuzhigangz'} 
-指定rowkey模糊查询：scan 'xuzhigang:student',{FILTER=>"PrefixFilter('xuz')"}
-指定数据时间范围值查询（包括1647439990581,不包括1647439990591）：scan 'xuzhigang:student', {TIMERANGE => [1647439990581, 1647439990591]}
-限制查找行数（结果的rowkey数）：scan 'xuzhigang:student',{COLUMNS=>['info2','score'],LIMIT=>1}
+（2）查询命名空间：list_namespace
+（3）列出表：list
+（4）创建表：create 'jinlantao_test:test1', 'cf1'
+（5）描述表：describe 'jinlantao_test:test1'                          # 单引号必须有，不能省略
+（6）插入数据：put 'jinlantao_test:test1', 'r1', 'cf1:c1', 'value'
+（7）获取数据：get 'jinlantao_test:test1', 'r1'            # 也可以使用get 'jinlantao_test:test1', 'r1','cf1'   、get 'jinlantao_test:test1', 'r1','cf1:c1'
+（8）扫描表：scan 'jinlantao_test:test1'
+（9）统计总数：count 'jinlantao_test:test1'
+（10）删除数据：delete 'jinlantao_test:test1', 'r1', 'cf1:c1'
+（11）禁止表：disable 'jinlantao_test:test1'
+（12）删除表：drop 'jinlantao_test:test1'
+（13）删除命名空间：drop_namespace 'jinlantao_test'
+（14）在创建表的时候，指定保存的版本数（假设指定为5）:create 'Student',{NAME=>'username',VERSIONS=>5}   如果表已经存在，那么用alter
+（15）查询时，指定查询的历史版本数。默认会查询出最新的数据。（有效取值为1到5）：get 'Student','1001',{COLUMN=>'username',VERSIONS=>5}
+（16）多列族查询:scan 'xuzhigang:student',{COLUMN=>['info2','score']}
+（17）指定多个列族、并使用列限定词模糊查询：scan 'xuzhigang:student', {COLUMNS => ['info2','score'], FILTER => "(QualifierFilter(=,'substring:75'))"}
+（18）rowkey范围值查询（查询info2和score列族，[STARTROW,ENDROW)）：scan 'xuzhigang:student',{COLUMNS => ['info','score'], STARTROW => 'Rose', ENDROW => 'xuzhigangz'} 
+（19）指定rowkey模糊查询：scan 'xuzhigang:student',{FILTER=>"PrefixFilter('xuz')"}
+（20）指定数据时间范围值查询（包括1647439990581,不包括1647439990591）：scan 'xuzhigang:student', {TIMERANGE => [1647439990581, 1647439990591]}
+（21）限制查找行数（结果的rowkey数）：scan 'xuzhigang:student',{COLUMNS=>['info2','score'],LIMIT=>1}
 
 
 hbase(main):028:0* get 'jinlantao_test:test1', 'r1','cf1'
