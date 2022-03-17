@@ -32,6 +32,14 @@ HBase（HBase shell 进入）：
 在创建表的时候，指定保存的版本数（假设指定为5）:create 'Student',{NAME=>'username',VERSIONS=>5}   如果表已经存在，那么用alter
 查询时，指定查询的历史版本数。默认会查询出最新的数据。（有效取值为1到5）：get 'Student','1001',{COLUMN=>'username',VERSIONS=>5}
 
+多列族查询:scan 'xuzhigang:student',{COLUMN=>['info2','score']}
+指定多个列族、并使用列限定词模糊查询：scan 'xuzhigang:student', {COLUMNS => ['info2','score'], FILTER => "(QualifierFilter(=,'substring:75'))"}
+rowkey范围值查询（查询info2和score列族，[STARTROW,ENDROW)）：scan 'xuzhigang:student',{COLUMNS => ['info','score'], STARTROW => 'Rose', ENDROW => 'xuzhigangz'} 
+指定rowkey模糊查询：scan 'xuzhigang:student',{FILTER=>"PrefixFilter('xuz')"}
+指定数据时间范围值查询（包括1647439990581,不包括1647439990591）：scan 'xuzhigang:student', {TIMERANGE => [1647439990581, 1647439990591]}
+限制查找行数（结果的rowkey数）：scan 'xuzhigang:student',{COLUMNS=>['info2','score'],LIMIT=>1}
+
+
 hbase(main):028:0* get 'jinlantao_test:test1', 'r1','cf1'
 COLUMN                                       CELL                                                                                                                           
  cf1:c1                                      timestamp=1647427317201, value=value                                                                                           
