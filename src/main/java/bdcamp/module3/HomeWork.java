@@ -56,8 +56,8 @@ public class HomeWork {
         config.set("hbase.master", "172.17.0.2:16000");  // 这里必须使用docker 容器地址！！！否则无法联通。
 
         createSchemaTables(config);  // 建表
-        insertData(config, "Tom", "20210000000001", "1", "75", "82");
-        insertData(config, "Jerry", "20210000000002", "1", "75", "82");
+        insertData(config, "Tom", "20210000000001", "1.txt", "75", "82");
+        insertData(config, "Jerry", "20210000000002", "1.txt", "75", "82");
         insertData(config, "Jack", "20210000000003", "2", "75", "82");
         insertData(config, "Rose", "20210000000004", "2", "75", "82");
         insertData(config, "xuzhigang", "G20210607020609", "aaa", "bbb", "ccc");
