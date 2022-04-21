@@ -28,7 +28,7 @@ import org.apache.spark.{SparkConf, SparkContext}
 object module7homework1 {
   def main(args: Array[String]) = {
 
-    val input = "D:\\学习笔记\\0099.大数据\\大数据训练营\\bdlearning\\src\\main\\java\\bdcamp\\module7\\scala\\org\\apache\\spark\\examples\\word\\1.txt"
+    val input = "src/main/java/bdcamp/module7/scala/org/apache/spark/examples/word/1.txt"
     /**
      * 首先获取路径下的文件列表，unionRDD 按照wordcount来构建
      */
