@@ -1,0 +1,85 @@
+spark-sql> explain EXTENDED select name,id,name from (select * from student ) temp where (5-3-2+id)>0 and age>0  except DISTINCT select name,id,name from student where id=2;
+22/04/21 12:07:32 INFO SparkSqlParser: Parsing command: explain EXTENDED select name,id,name from (select * from student ) temp where (5-3-2+id)>0 and age>0  except DISTINCT select name,id,name from student where id=2
+22/04/21 12:07:32 INFO HiveMetaStore: 0: get_table : db=default tbl=student
+22/04/21 12:07:32 INFO audit: ugi=root	ip=unknown-ip-addr	cmd=get_table : db=default tbl=student
+22/04/21 12:07:32 INFO CatalystSqlParser: Parsing command: int
+22/04/21 12:07:32 INFO CatalystSqlParser: Parsing command: string
+22/04/21 12:07:32 INFO CatalystSqlParser: Parsing command: int
+22/04/21 12:07:32 INFO HiveMetaStore: 0: get_table : db=default tbl=student
+22/04/21 12:07:32 INFO audit: ugi=root	ip=unknown-ip-addr	cmd=get_table : db=default tbl=student
+22/04/21 12:07:32 INFO CatalystSqlParser: Parsing command: int
+22/04/21 12:07:32 INFO CatalystSqlParser: Parsing command: string
+22/04/21 12:07:32 INFO CatalystSqlParser: Parsing command: int
+22/04/21 12:07:32 INFO MemoryStore: Block broadcast_14 stored as values in memory (estimated size 262.8 KB, free 366.0 MB)
+22/04/21 12:07:32 INFO MemoryStore: Block broadcast_14_piece0 stored as bytes in memory (estimated size 22.5 KB, free 366.0 MB)
+22/04/21 12:07:32 INFO BlockManagerInfo: Added broadcast_14_piece0 in memory on 172.17.0.2:34645 (size: 22.5 KB, free: 366.3 MB)
+22/04/21 12:07:32 INFO SparkContext: Created broadcast 14 from processCmd at CliDriver.java:376
+22/04/21 12:07:32 INFO MemoryStore: Block broadcast_15 stored as values in memory (estimated size 262.8 KB, free 365.8 MB)
+22/04/21 12:07:32 INFO MemoryStore: Block broadcast_15_piece0 stored as bytes in memory (estimated size 22.5 KB, free 365.7 MB)
+22/04/21 12:07:32 INFO BlockManagerInfo: Added broadcast_15_piece0 in memory on 172.17.0.2:34645 (size: 22.5 KB, free: 366.3 MB)
+22/04/21 12:07:32 INFO SparkContext: Created broadcast 15 from processCmd at CliDriver.java:376
+22/04/21 12:07:32 INFO SparkContext: Starting job: processCmd at CliDriver.java:376
+22/04/21 12:07:32 INFO DAGScheduler: Got job 11 (processCmd at CliDriver.java:376) with 1 output partitions
+22/04/21 12:07:32 INFO DAGScheduler: Final stage: ResultStage 10 (processCmd at CliDriver.java:376)
+22/04/21 12:07:32 INFO DAGScheduler: Parents of final stage: List()
+22/04/21 12:07:32 INFO DAGScheduler: Missing parents: List()
+22/04/21 12:07:32 INFO DAGScheduler: Submitting ResultStage 10 (MapPartitionsRDD[39] at processCmd at CliDriver.java:376), which has no missing parents
+22/04/21 12:07:32 INFO MemoryStore: Block broadcast_16 stored as values in memory (estimated size 4.5 KB, free 365.7 MB)
+22/04/21 12:07:32 INFO MemoryStore: Block broadcast_16_piece0 stored as bytes in memory (estimated size 2.6 KB, free 365.7 MB)
+22/04/21 12:07:32 INFO BlockManagerInfo: Added broadcast_16_piece0 in memory on 172.17.0.2:34645 (size: 2.6 KB, free: 366.3 MB)
+22/04/21 12:07:32 INFO SparkContext: Created broadcast 16 from broadcast at DAGScheduler.scala:996
+22/04/21 12:07:32 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 10 (MapPartitionsRDD[39] at processCmd at CliDriver.java:376)
+22/04/21 12:07:32 INFO TaskSchedulerImpl: Adding task set 10.0 with 1 tasks
+22/04/21 12:07:32 INFO TaskSetManager: Starting task 0.0 in stage 10.0 (TID 11, localhost, executor driver, partition 0, PROCESS_LOCAL, 8727 bytes)
+22/04/21 12:07:32 INFO Executor: Running task 0.0 in stage 10.0 (TID 11)
+22/04/21 12:07:32 INFO Executor: Finished task 0.0 in stage 10.0 (TID 11). 2226 bytes result sent to driver
+22/04/21 12:07:32 INFO TaskSetManager: Finished task 0.0 in stage 10.0 (TID 11) in 11 ms on localhost (executor driver) (1/1)
+22/04/21 12:07:32 INFO TaskSchedulerImpl: Removed TaskSet 10.0, whose tasks have all completed, from pool
+22/04/21 12:07:32 INFO DAGScheduler: ResultStage 10 (processCmd at CliDriver.java:376) finished in 0.011 s
+22/04/21 12:07:32 INFO DAGScheduler: Job 11 finished: processCmd at CliDriver.java:376, took 0.030363 s
+== Parsed Logical Plan ==
+'Except
+:- 'Project ['name, 'id, 'name]
+:  +- 'Filter (((((5 - 3) - 2) + 'id) > 0) && ('age > 0))
+:     +- 'SubqueryAlias temp
+:        +- 'Project [*]
+:           +- 'UnresolvedRelation `student`
++- 'Project ['name, 'id, 'name]
+   +- 'Filter ('id = 2)
+      +- 'UnresolvedRelation `student`
+
+== Analyzed Logical Plan ==
+name: string, id: int, name: string
+Except
+:- Project [name#58, id#57, name#58]
+:  +- Filter (((((5 - 3) - 2) + id#57) > 0) && (age#59 > 0))
+:     +- SubqueryAlias temp
+:        +- Project [id#57, name#58, age#59]
+:           +- MetastoreRelation default, student
++- Project [name#61, id#60, name#61]
+   +- Filter (id#60 = 2)
+      +- MetastoreRelation default, student
+
+== Optimized Logical Plan ==
+Aggregate [name#58, id#57], [name#58, id#57, name#58]
++- Join LeftAnti, (((name#58 <=> name#61) && (id#57 <=> id#60)) && (name#58 <=> name#61))
+   :- Project [name#58, id#57, name#58]
+   :  +- Filter (((isnotnull(id#57) && isnotnull(age#59)) && ((0 + id#57) > 0)) && (age#59 > 0))
+   :     +- MetastoreRelation default, student
+   +- Project [name#61, id#60, name#61]
+      +- Filter (isnotnull(id#60) && (id#60 = 2))
+         +- MetastoreRelation default, student
+
+== Physical Plan ==
+*HashAggregate(keys=[name#58, id#57], functions=[], output=[name#58, id#57, name#58])
++- Exchange hashpartitioning(name#58, id#57, 200)
+   +- *HashAggregate(keys=[name#58, id#57], functions=[], output=[name#58, id#57])
+      +- *BroadcastHashJoin [coalesce(name#58, ), coalesce(id#57, 0), coalesce(name#58, )], [coalesce(name#61, ), coalesce(id#60, 0), coalesce(name#61, )], LeftAnti, BuildRight, (((name#58 <=> name#61) && (id#57 <=> id#60)) && (name#58 <=> name#61))
+         :- *Project [name#58, id#57, name#58]
+         :  +- *Filter (((isnotnull(id#57) && isnotnull(age#59)) && ((0 + id#57) > 0)) && (age#59 > 0))
+         :     +- HiveTableScan [name#58, id#57, age#59], MetastoreRelation default, student
+         +- BroadcastExchange HashedRelationBroadcastMode(List(coalesce(input[0, string, true], ), coalesce(input[1, int, false], 0), coalesce(input[0, string, true], )))
+            +- *Filter (isnotnull(id#60) && (id#60 = 2))
+               +- HiveTableScan [name#61, id#60, name#61], MetastoreRelation default, student
+Time taken: 0.411 seconds, Fetched 1 row(s)
+22/04/21 12:07:32 INFO CliDriver: Time taken: 0.411 seconds, Fetched 1 row(s)
