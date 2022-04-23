@@ -1,4 +1,4 @@
-package bdcamp.refer
+package bdcamp.refer.module7
 
 import org.apache.spark.{SparkConf, SparkContext}
 
