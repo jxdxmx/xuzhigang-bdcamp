@@ -25,6 +25,8 @@ import org.apache.spark.{SparkConf, SparkContext}
 //“it”: {(0,2), (1,1), (2,1)}
 //“what”: {(0,1), (1,1)}`
 
+// 参考 bdcamp\refer\MainForTextFile.scala
+// MainForWholeTextFiles.scala
 object module7homework1 {
   def main(args: Array[String]) = {
 
