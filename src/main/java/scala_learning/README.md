@@ -1,3 +1,39 @@
+#scala面试题
+https://blog.csdn.net/weixin_45557389/article/details/108195843
+
+#scala下划线的用法大全
+https://baijiahao.baidu.com/s?id=1724716830760236383&wfr=spider&for=pc
+> 用于变量初始化 .该语法只适用于成员变量，不适用于局部变量
+> 用于导包引入导包引入时使用_导入该包下所有内容，类比Java中的*
+> 用于模式匹配模式匹配中可以用下划线来作为Java中default的类比使用，也可以在匹配集合类型时，用于代表集合中元素
+> 用于访问tuple元素
+```scala
+    val t = (1, 2, 3)
+    println(t._1)
+```
+> 用于简写函数
+```scala
+  def main(args: Array[String]): Unit = {
+    var nums = List(1, 2, 3, 4)
+    println(nums.map(_ + 2)) //    List(3, 4, 5, 6)
+    println(nums.sortWith(_ > _)) //    List(4, 3, 2, 1)
+    println(nums.filter(_ % 2 == 0))//    List(2, 4)
+  }
+```
+>定义偏函数.对某个多参数函数进行部分函数调用，没有传入的参数使用_代替，返回结果即为偏函数。
+```scala
+object HelloWorld {
+  def main(args: Array[String]): Unit = {
+    var b = sum(1, _, 3)
+    println(b(20))
+    // 24
+  }
+
+  def sum(a: Int, b: Int, c: Int) = a + b + c
+}
+```
+
+
 
 ```shell script
  重命名成员
@@ -915,7 +951,8 @@ object HelloWorld {
     case _ => {
       println("hello ,man")
        "many"
-    }  }
+    }  
+  }
 
 }
 ```
@@ -1146,14 +1183,124 @@ object HelloWorld {
 }
 ```
 
+```scala
+object HelloWorld {
+  def main(args: Array[String]): Unit = {
+    println(sum2)
+    println(sum2(1, 3, 5))
+    var f = sum2
+  }
 
+  def sum(a: Int, b: Int, c: Int) = a + b + c
 
+  def sum3(a: Int, b: Int, c: Int): Int = {
+    a + b + c
+  }
 
+  var sum2 = (a: Int, b: Int, c: Int) => {
+    a + b + c
+  }
+}
+```
 
+```scala
+package scala_learning
 
+/**
+ * 单词计数：将集合中出现的相同的单词，进行计数，取计数排名前二的结果
+ */
+object HelloWorld {
+  def main(args: Array[String]): Unit = {
+    val stringList = List("hello scala hbase", "hello scala", "hello")
 
+    // 1.将每一个字符串转换成一个一个的单词
+    val wordList: List[String] = stringList.flatMap(str => str.split(" "))
+    println(wordList) // List(hello, scala, hbase, hello, scala, hello)
 
+    // 2.将相同的单词放置在一起
+    // 在map中，如果传进来什么就返回什么，不要用_省略
+    val wordsMap: Map[String, List[String]] = wordList.groupBy(word => word)
+    println(wordsMap) // Map(hello -> List(hello, hello, hello), scala -> List(scala, scala), hbase -> List(hbase))
 
+    // 3.对相同的单词进行计数
+    // (word, list) => (word, count)
+    val wordCount: Map[String, Int] = wordsMap.map(tuple => (tuple._1, tuple._2.size))
+    println(wordCount) // Map(hello -> 3, scala -> 2, hbase -> 1)
+
+    // 4.对计数完成后的结果进行排序（降序）
+    val sortList: List[(String, Int)] = wordCount.toList.sortWith((left, right) => left._2 > right._2)
+    println(sortList) //List((hello,3), (scala,2), (hbase,1))
+
+    // 5.对排名后的结果取前2名
+    val resultList: List[(String, Int)] = sortList.take(2)
+    println(resultList) // List((hello,3), (scala,2))
+
+    // 以上所有代码可以简化成
+    stringList.flatMap(_.split(" ")).groupBy(word => word).map(tuple => (tuple._1, tuple._2.size)).toList.sortBy(_._2).reverse.take(2).foreach(println(_))
+
+    println("-----------------------------")
+
+    // 复杂类型
+    val tupleList = List(("Hello Scala World ", 3), ("Hello Scala", 2), ("Hello", 1))
+    val stringList1: List[String] = tupleList.map(t => t._1 * t._2)
+    println(stringList1) // List(Hello Scala World Hello Scala World Hello Scala World , Hello ScalaHello Scala, Hello)
+
+    val words: List[String] = stringList1.flatMap(_.split(" "))
+    println(words) //List(Hello, Scala, World, Hello, Scala, World, Hello, Scala, World, Hello, ScalaHello, Scala, Hello)
+
+  }
+}
+
+```
+
+```scala
+object HelloWorld {
+  def main(args: Array[String]): Unit = {
+    val name = "Tom"
+    val age = 36
+    //System.currentTimeMillis()是一个方法需要{}
+    println(s"${System.currentTimeMillis()} $name ’s age is $age")
+  }
+}
+```
+#惰性函数 lazy
+```scala
+object HelloWorld {
+  def init(): String = {
+    println("huangbo 666")
+    "huangbo"
+  }
+
+  def main(args: Array[String]): Unit = {
+    //  huangbo 666
+    //  666
+    //  huangbo
+    val name = init() // 将执行init()函数，并打印huangbo 666
+    println("666")
+    println(name)
+
+    //  666
+    //  huangbo 666
+    //  huangbo
+    lazy val name2 = init() // 不会立即执行init()函数
+    println("666")
+    println(name2) // 将执行init()函数，并打印huangbo 666，然后继续打印huangbo
+  }
+}
+```
+
+#偏函数
+```scala
+object HelloWorld {
+  def main(args: Array[String]): Unit = {
+    var b = sum(1, _, 3)
+    println(b(20))
+    // 24
+  }
+
+  def sum(a: Int, b: Int, c: Int) = a + b + c
+}
+```
 
 
 
