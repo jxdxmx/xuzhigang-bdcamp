@@ -1,0 +1,59 @@
+explain EXTENDED  select name from (select id,name from student where id>1) where id>1 and (true and true);
+
+spark-sql> explain EXTENDED  select name from (select id,name from student where id>1) where id>1 and (true and true);
+22/04/21 11:52:29 INFO SparkSqlParser: Parsing command: explain EXTENDED  select name from (select id,name from student where id>1) where id>1 and (true and true)
+22/04/21 11:52:29 INFO HiveMetaStore: 0: get_table : db=default tbl=student
+22/04/21 11:52:29 INFO audit: ugi=root	ip=unknown-ip-addr	cmd=get_table : db=default tbl=student
+22/04/21 11:52:29 INFO CatalystSqlParser: Parsing command: int
+22/04/21 11:52:29 INFO CatalystSqlParser: Parsing command: string
+22/04/21 11:52:29 INFO CatalystSqlParser: Parsing command: int
+22/04/21 11:52:29 INFO MemoryStore: Block broadcast_12 stored as values in memory (estimated size 262.8 KB, free 365.0 MB)
+22/04/21 11:52:29 INFO MemoryStore: Block broadcast_12_piece0 stored as bytes in memory (estimated size 22.5 KB, free 364.9 MB)
+22/04/21 11:52:29 INFO BlockManagerInfo: Added broadcast_12_piece0 in memory on 172.17.0.2:34645 (size: 22.5 KB, free: 366.1 MB)
+22/04/21 11:52:29 INFO SparkContext: Created broadcast 12 from processCmd at CliDriver.java:376
+22/04/21 11:52:29 INFO SparkContext: Starting job: processCmd at CliDriver.java:376
+22/04/21 11:52:29 INFO DAGScheduler: Got job 10 (processCmd at CliDriver.java:376) with 1 output partitions
+22/04/21 11:52:29 INFO DAGScheduler: Final stage: ResultStage 9 (processCmd at CliDriver.java:376)
+22/04/21 11:52:29 INFO DAGScheduler: Parents of final stage: List()
+22/04/21 11:52:29 INFO DAGScheduler: Missing parents: List()
+22/04/21 11:52:29 INFO DAGScheduler: Submitting ResultStage 9 (MapPartitionsRDD[36] at processCmd at CliDriver.java:376), which has no missing parents
+22/04/21 11:52:29 INFO MemoryStore: Block broadcast_13 stored as values in memory (estimated size 4.5 KB, free 364.9 MB)
+22/04/21 11:52:29 INFO MemoryStore: Block broadcast_13_piece0 stored as bytes in memory (estimated size 2.6 KB, free 364.9 MB)
+22/04/21 11:52:29 INFO BlockManagerInfo: Added broadcast_13_piece0 in memory on 172.17.0.2:34645 (size: 2.6 KB, free: 366.1 MB)
+22/04/21 11:52:29 INFO SparkContext: Created broadcast 13 from broadcast at DAGScheduler.scala:996
+22/04/21 11:52:29 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 9 (MapPartitionsRDD[36] at processCmd at CliDriver.java:376)
+22/04/21 11:52:29 INFO TaskSchedulerImpl: Adding task set 9.0 with 1 tasks
+22/04/21 11:52:29 INFO TaskSetManager: Starting task 0.0 in stage 9.0 (TID 10, localhost, executor driver, partition 0, PROCESS_LOCAL, 7077 bytes)
+22/04/21 11:52:29 INFO Executor: Running task 0.0 in stage 9.0 (TID 10)
+22/04/21 11:52:29 INFO Executor: Finished task 0.0 in stage 9.0 (TID 10). 1560 bytes result sent to driver
+22/04/21 11:52:29 INFO TaskSetManager: Finished task 0.0 in stage 9.0 (TID 10) in 11 ms on localhost (executor driver) (1/1)
+22/04/21 11:52:29 INFO TaskSchedulerImpl: Removed TaskSet 9.0, whose tasks have all completed, from pool
+22/04/21 11:52:29 INFO DAGScheduler: ResultStage 9 (processCmd at CliDriver.java:376) finished in 0.013 s
+22/04/21 11:52:29 INFO DAGScheduler: Job 10 finished: processCmd at CliDriver.java:376, took 0.027503 s
+== Parsed Logical Plan ==
+'Project ['name]
++- 'Filter (('id > 1) && (true && true))
+   +- 'Project ['id, 'name]
+      +- 'Filter ('id > 1)
+         +- 'UnresolvedRelation `student`
+
+== Analyzed Logical Plan ==
+name: string
+Project [name#52]
++- Filter ((id#51 > 1) && (true && true))
+   +- Project [id#51, name#52]
+      +- Filter (id#51 > 1)
+         +- MetastoreRelation default, student
+
+== Optimized Logical Plan ==
+Project [name#52]
++- Filter (isnotnull(id#51) && (id#51 > 1))
+   +- MetastoreRelation default, student
+
+== Physical Plan ==
+*Project [name#52]
++- *Filter (isnotnull(id#51) && (id#51 > 1))
+   +- HiveTableScan [name#52, id#51], MetastoreRelation default, student
+Time taken: 0.127 seconds, Fetched 1 row(s)
+22/04/21 11:52:29 INFO CliDriver: Time taken: 0.127 seconds, Fetched 1 row(s)
+spark-sql>

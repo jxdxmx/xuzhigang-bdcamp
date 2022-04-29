@@ -1,0 +1,112 @@
+docker run -it epahomov/docker-spark /spark/bin/spark-sql
+
+spark-sql> explain codegen select name from (select id,name from student where id>1) where id>1 and (true and true);
+22/04/29 13:07:07 INFO SparkSqlParser: Parsing command: explain codegen select name from (select id,name from student where id>1) where id>1 and (true and true)
+22/04/29 13:07:07 INFO HiveMetaStore: 0: get_table : db=default tbl=student
+22/04/29 13:07:07 INFO audit: ugi=root	ip=unknown-ip-addr	cmd=get_table : db=default tbl=student
+22/04/29 13:07:07 INFO CatalystSqlParser: Parsing command: int
+22/04/29 13:07:07 INFO CatalystSqlParser: Parsing command: string
+22/04/29 13:07:07 INFO CatalystSqlParser: Parsing command: int
+22/04/29 13:07:07 INFO MemoryStore: Block broadcast_7 stored as values in memory (estimated size 262.8 KB, free 365.5 MB)
+22/04/29 13:07:07 INFO MemoryStore: Block broadcast_7_piece0 stored as bytes in memory (estimated size 22.5 KB, free 365.5 MB)
+22/04/29 13:07:07 INFO BlockManagerInfo: Added broadcast_7_piece0 in memory on 172.17.0.2:46035 (size: 22.5 KB, free: 366.2 MB)
+22/04/29 13:07:07 INFO SparkContext: Created broadcast 7 from processCmd at CliDriver.java:376
+22/04/29 13:07:08 INFO SparkContext: Starting job: processCmd at CliDriver.java:376
+22/04/29 13:07:08 INFO DAGScheduler: Got job 6 (processCmd at CliDriver.java:376) with 1 output partitions
+22/04/29 13:07:08 INFO DAGScheduler: Final stage: ResultStage 6 (processCmd at CliDriver.java:376)
+22/04/29 13:07:08 INFO DAGScheduler: Parents of final stage: List()
+22/04/29 13:07:08 INFO DAGScheduler: Missing parents: List()
+22/04/29 13:07:08 INFO DAGScheduler: Submitting ResultStage 6 (MapPartitionsRDD[21] at processCmd at CliDriver.java:376), which has no missing parents
+22/04/29 13:07:08 INFO MemoryStore: Block broadcast_8 stored as values in memory (estimated size 4.5 KB, free 365.5 MB)
+22/04/29 13:07:08 INFO MemoryStore: Block broadcast_8_piece0 stored as bytes in memory (estimated size 2.6 KB, free 365.5 MB)
+22/04/29 13:07:08 INFO BlockManagerInfo: Added broadcast_8_piece0 in memory on 172.17.0.2:46035 (size: 2.6 KB, free: 366.2 MB)
+22/04/29 13:07:08 INFO SparkContext: Created broadcast 8 from broadcast at DAGScheduler.scala:996
+22/04/29 13:07:08 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 6 (MapPartitionsRDD[21] at processCmd at CliDriver.java:376)
+22/04/29 13:07:08 INFO TaskSchedulerImpl: Adding task set 6.0 with 1 tasks
+22/04/29 13:07:08 INFO TaskSetManager: Starting task 0.0 in stage 6.0 (TID 7, localhost, executor driver, partition 0, PROCESS_LOCAL, 10123 bytes)
+22/04/29 13:07:08 INFO Executor: Running task 0.0 in stage 6.0 (TID 7)
+22/04/29 13:07:08 INFO CodeGenerator: Code generated in 9.320195 ms
+22/04/29 13:07:08 INFO Executor: Finished task 0.0 in stage 6.0 (TID 7). 2938 bytes result sent to driver
+22/04/29 13:07:08 INFO TaskSetManager: Finished task 0.0 in stage 6.0 (TID 7) in 28 ms on localhost (executor driver) (1/1)
+22/04/29 13:07:08 INFO TaskSchedulerImpl: Removed TaskSet 6.0, whose tasks have all completed, from pool
+22/04/29 13:07:08 INFO DAGScheduler: ResultStage 6 (processCmd at CliDriver.java:376) finished in 0.029 s
+22/04/29 13:07:08 INFO DAGScheduler: Job 6 finished: processCmd at CliDriver.java:376, took 0.045752 s
+Found 1 WholeStageCodegen subtrees.
+== Subtree 1 / 1 ==
+*Project [name#29]
++- *Filter (isnotnull(id#28) && (id#28 > 1))
+   +- HiveTableScan [name#29, id#28], MetastoreRelation default, student
+
+Generated code:
+/* 001 */ public Object generate(Object[] references) {
+/* 002 */   return new GeneratedIterator(references);
+/* 003 */ }
+/* 004 */
+/* 005 */ final class GeneratedIterator extends org.apache.spark.sql.execution.BufferedRowIterator {
+/* 006 */   private Object[] references;
+/* 007 */   private scala.collection.Iterator[] inputs;
+/* 008 */   private scala.collection.Iterator inputadapter_input;
+/* 009 */   private org.apache.spark.sql.execution.metric.SQLMetric filter_numOutputRows;
+/* 010 */   private UnsafeRow filter_result;
+/* 011 */   private org.apache.spark.sql.catalyst.expressions.codegen.BufferHolder filter_holder;
+/* 012 */   private org.apache.spark.sql.catalyst.expressions.codegen.UnsafeRowWriter filter_rowWriter;
+/* 013 */   private UnsafeRow project_result;
+/* 014 */   private org.apache.spark.sql.catalyst.expressions.codegen.BufferHolder project_holder;
+/* 015 */   private org.apache.spark.sql.catalyst.expressions.codegen.UnsafeRowWriter project_rowWriter;
+/* 016 */
+/* 017 */   public GeneratedIterator(Object[] references) {
+/* 018 */     this.references = references;
+/* 019 */   }
+/* 020 */
+/* 021 */   public void init(int index, scala.collection.Iterator[] inputs) {
+/* 022 */     partitionIndex = index;
+/* 023 */     this.inputs = inputs;
+/* 024 */     inputadapter_input = inputs[0];
+/* 025 */     this.filter_numOutputRows = (org.apache.spark.sql.execution.metric.SQLMetric) references[0];
+/* 026 */     filter_result = new UnsafeRow(2);
+/* 027 */     this.filter_holder = new org.apache.spark.sql.catalyst.expressions.codegen.BufferHolder(filter_result, 32);
+/* 028 */     this.filter_rowWriter = new org.apache.spark.sql.catalyst.expressions.codegen.UnsafeRowWriter(filter_holder, 2);
+/* 029 */     project_result = new UnsafeRow(1);
+/* 030 */     this.project_holder = new org.apache.spark.sql.catalyst.expressions.codegen.BufferHolder(project_result, 32);
+/* 031 */     this.project_rowWriter = new org.apache.spark.sql.catalyst.expressions.codegen.UnsafeRowWriter(project_holder, 1);
+/* 032 */
+/* 033 */   }
+/* 034 */
+/* 035 */   protected void processNext() throws java.io.IOException {
+/* 036 */     while (inputadapter_input.hasNext()) {
+/* 037 */       InternalRow inputadapter_row = (InternalRow) inputadapter_input.next();
+/* 038 */       boolean inputadapter_isNull1 = inputadapter_row.isNullAt(1);
+/* 039 */       int inputadapter_value1 = inputadapter_isNull1 ? -1 : (inputadapter_row.getInt(1));
+/* 040 */
+/* 041 */       if (!(!(inputadapter_isNull1))) continue;
+/* 042 */
+/* 043 */       boolean filter_isNull2 = false;
+/* 044 */
+/* 045 */       boolean filter_value2 = false;
+/* 046 */       filter_value2 = inputadapter_value1 > 1;
+/* 047 */       if (!filter_value2) continue;
+/* 048 */
+/* 049 */       filter_numOutputRows.add(1);
+/* 050 */
+/* 051 */       boolean inputadapter_isNull = inputadapter_row.isNullAt(0);
+/* 052 */       UTF8String inputadapter_value = inputadapter_isNull ? null : (inputadapter_row.getUTF8String(0));
+/* 053 */       project_holder.reset();
+/* 054 */
+/* 055 */       project_rowWriter.zeroOutNullBytes();
+/* 056 */
+/* 057 */       if (inputadapter_isNull) {
+/* 058 */         project_rowWriter.setNullAt(0);
+/* 059 */       } else {
+/* 060 */         project_rowWriter.write(0, inputadapter_value);
+/* 061 */       }
+/* 062 */       project_result.setTotalSize(project_holder.totalSize());
+/* 063 */       append(project_result);
+/* 064 */       if (shouldStop()) return;
+/* 065 */     }
+/* 066 */   }
+/* 067 */ }
+
+
+Time taken: 0.202 seconds, Fetched 1 row(s)
+22/04/29 13:07:08 INFO CliDriver: Time taken: 0.202 seconds, Fetched 1 row(s)
+spark-sql>
