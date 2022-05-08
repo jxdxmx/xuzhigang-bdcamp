@@ -44,9 +44,13 @@ case class ShowVersionCommand() extends RunnableCommand {
     Seq(Row(util.Properties.versionNumberString, System.getProperty("java.version")))
   }
 }
-###在 spark 源码根目录下执行命令"./build/sbt package -DskipTests -Phive -Phive-thriftserver"
+
+`###在 spark 源码根目录下执行命令"./build/sbt package -DskipTests -Phive -Phive-thriftserver"
 在 spark 源码根目录下执行命令"sbt package -DskipTests -Phive -Phive-thriftserver"
-将SPARK_HOME环境变量设置成 spark 源码根目录，然后执行./bin/spark-sql，进入 spark-sql 控制台之后，执行 show version 命令
+将SPARK_HOME环境变量设置成 spark 源码根目录，然后执行./bin/spark-sql，进入 spark-sql 控制台之后，执行 show version 命令`
+
+5. 编译 build/mvn clean package -DskipTests -Phive -Phive-thriftserver #编译整个v3.2.0源码，跳过测试
+6. 运行 bin/spark-sql，输入 show version;
 spark-sql> show version;
 2.12.15 1.8.0_312
 
