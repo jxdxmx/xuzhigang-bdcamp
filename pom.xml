@@ -12,7 +12,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <scala.binary.version>2.12</scala.binary.version>
-        <spark.version>3.4.0-SNAPSHOT</spark.version>
+        <spark.version>3.2.0</spark.version>
         <fasterxml.jackson.version>2.13.2</fasterxml.jackson.version>
         <fasterxml.jackson.databind.version>2.13.2.1</fasterxml.jackson.databind.version>
     </properties>
