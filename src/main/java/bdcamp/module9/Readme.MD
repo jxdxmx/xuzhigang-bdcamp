@@ -38,10 +38,16 @@ VERSION: 'VERSION';
   override def visitShowVersion(ctx: ShowVersionContext): LogicalPlan = withOrigin(ctx) {
     ShowVersionCommand()
   }
+  
 在 commands.scala 类中增加实现类 ShowVersionCommand，代码如下，
-case class ShowVersionCommand() extends RunnableCommand {
+case class ShowVersionCommand() extends LeafRunnableCommand {
+  override val output: Seq[Attribute] = Seq(AttributeReference("version", StringType)()) // 这条代码超级关键！！！如果没有这条代码，是会index out of bound的！！！
+
   override def run(sparkSession: SparkSession): Seq[Row] = {
-    Seq(Row(util.Properties.versionNumberString, System.getProperty("java.version")))
+    val sparkVersion = sparkSession.version
+    val javaVersion = System.getProperty("java.version")
+    val output = "Spark Version : %s, Java Version: %s".format(sparkVersion, javaVersion)
+    Seq(Row(output))
   }
 }
 
