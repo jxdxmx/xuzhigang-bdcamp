@@ -38,24 +38,35 @@ ansiNonReserved
 COMPACT: 'COMPACT';
 
 2、执行 spark-catalyst maven module的anltr4:anltr4，修改SparkSqlParser.scala文件, 重写visitCompactTable方法
-  override def visitCompactTable(ctx: compactTableContext): LogicalPlan = withOrigin(ctx) {
-    ShowCompactCommand()
+override def visitCompactTable(ctx: CompactTableContext): LogicalPlan = withOrigin(ctx) {
+    val table: TableIdentifier = visitTableIdentifier(ctx.tableIdentifier())
+    val fileNum: Option[Int] = ctx.INTEGER_VALUE().getText.toInt
+    CompactTableCommand(table, fileNum)
   }
 
-在 commands.scala 类中增加实现类 ShowCompactCommand，代码如下，
-case class ShowCompactCommand() extends LeafRunnableCommand {
-  override val output: Seq[Attribute] = Seq(AttributeReference("COMPACT", StringType)())
-  override def run(sparkSession: SparkSession): Seq[Row] = {
-    spark.read.parquet("parquet_file_path").coalesce(1).write.parquet("new_path")
-    spark\
-        .read\
-        .parquet('...'))\
-        .repartition('key1', 'key2',...)\
-        .write\
-        .partitionBy('key1', 'key2',...)\
-        .option('path', target_part)\
-        .saveAsTable('partitioned')
-  }
+在 commands.scala 类中增加实现类 CompactTableCommand，代码如下，
+case class CompactTableCommand(table: TableIdentifier,fileNum: Option[Int]) extends LeafRunnableCommand {
+override def output: Seq[Attribute] = Seq(AttributeReference("no_return", StringType, false)())
+override def run(spark: SparkSession): Seq[Row] = {
+val dataDF: DataFrame = spark.table(table)
+val num: Int = fileNum match {
+  case Some(i) => i
+  case _ =>
+    (spark
+      .sessionState
+      .executePlan(dataDF.queryExecution.logical)
+      .optimizedPlan
+      .stats.sizeInBytes / (1024L * 1024L * 128L)
+      ).toInt
+}
+log.warn(s"fileNum is $num")
+val tmpTableName = table.identifier+"_tmp"
+dataDF.write.mode(SaveMode.Overwrite).saveAsTable(tmpTableName)
+spark.table(tmpTableName).repartition(num).write.mode(SaveMode.Overwrite).saveAsTable(table.identifier)
+spark.sql(s"drop table if exists $tmpTableName")
+log.warn("Compacte Table Completed.")
+Seq()
+}
 }
 
 5. 编译 build/mvn clean package -DskipTests -Phive -Phive-thriftserver #编译整个v3.2.0源码，跳过测试
